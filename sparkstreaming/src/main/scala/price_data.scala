@@ -22,7 +22,7 @@ object JSONDataStreaming {
 
     val confSparkCassandra  = new SparkConf().setAppName("price_data").set("spark.cassandra.connection.host", "52.39.96.29")
 val scCas = new SparkContext(confSparkCassandra)
-    val ssc = new StreamingContext(scCas, Seconds(9))
+    val ssc = new StreamingContext(scCas, Seconds(10))
     val rootLogger = Logger.getRootLogger()
     rootLogger.setLevel(Level.ERROR)
 
@@ -37,9 +37,12 @@ val scCas = new SparkContext(confSparkCassandra)
 	import sqlContext.implicits._
         val lines = rdd.map(_._2)
 	val df = sqlContext.jsonRDD(lines)
+	var df2=df.select(df("location"),df("item"),df("time"))
+	df2.map{case Row(location: String,item: String,time:Long)=>dumbHere(location,item,time)}.saveToCassandra("play","dumbdata")
+	//df2.show(); 
 	val dfsort=df.groupBy("location","item").count().sort("location","count")
 	val dfsortcount=dfsort.select(dfsort("location"),dfsort("item"),dfsort("count").cast("int"))
-	dfsortcount.show(32)
+	//dfsortcount.show(32)
 	dfsortcount.map{case Row(location: String,item: String,count: Int)=>countRT(location,item,count)}.saveToCassandra("play","sdata")
 	//println(lines.asInstanceOf[AnyRef].getClass.getSimpleName)
 	println("--------------------------------------------")
@@ -53,6 +56,7 @@ val scCas = new SparkContext(confSparkCassandra)
 
 
 case class countRT(location: String,item: String,count: Int)
+case class dumbHere(location: String,item: String,time:Long)
 
 /** Lazily instantiated singleton instance of SQLContext */
 object SQLContextSingleton {
