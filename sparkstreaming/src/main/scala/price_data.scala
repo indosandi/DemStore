@@ -38,6 +38,13 @@ val scCas = new SparkContext(confSparkCassandra)
         val lines = rdd.map(_._2)
 	val df = sqlContext.jsonRDD(lines)
 	var df2=df.select(df("location"),df("item"),df("time"))
+  	val df3=df2.map{case Row(x:String,y:String,z:Long)=>((x,y),(z,z))}	
+	val df4=df3.reduceByKey((x,y)=>(math.min(x._1,y._1),math.max(x._2,y._2)))
+	val df5=df4.map{case ((a,b),(c,d))=>(a,b,d,c)}
+	df5.saveToCassandra("play","tempdata")
+	//println(df4.toDF().first)
+	df5.toDF().show()
+	println(df4.asInstanceOf[AnyRef].getClass.getSimpleName)
 	df2.map{case Row(location: String,item: String,time:Long)=>dumbHere(location,item,time)}.saveToCassandra("play","dumbdata")
 	//df2.show(); 
 	val dfsort=df.groupBy("location","item").count().sort("location","count")
@@ -55,6 +62,7 @@ val scCas = new SparkContext(confSparkCassandra)
 }
 
 
+case class minMax(location: String,item: String,min: Long, max:Long)
 case class countRT(location: String,item: String,count: Int)
 case class dumbHere(location: String,item: String,time:Long)
 
