@@ -29,7 +29,10 @@ val scCas = new SparkContext(confSparkCassandra)
     // Create direct kafka stream with brokers and topics
     val kafkaParams = Map[String, String]("metadata.broker.list" -> brokers)
     val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicsSet)
-    val divi:Int=5
+    val timeSpan:Long=10000
+    val divi:Long=10
+    val intv:Long=timeSpan/divi
+    println(intv)
     messages.foreachRDD { rdd =>
 
         val sqlContext = SQLContextSingleton.getInstance(rdd.sparkContext)
@@ -38,7 +41,7 @@ val scCas = new SparkContext(confSparkCassandra)
         val lines = rdd.map(_._2)
 	val df = sqlContext.jsonRDD(lines)
 	var df2=df.select(df("location"),df("item"),df("time")).sort("location","item","time")
-	//df2.show(30)
+	//df2.show(3)
   	val df3=df2.map{case Row(x:String,y:String,z:Long)=>((x,y),(z,z,z))}	
 	val df4=df3.reduceByKey((x,y)=>(math.min(x._1,y._1),math.max(x._2,y._2),x._3))
 	val df5=df4.map{case ((a,b),(c,d,e))=>(a,b,d,c)}
@@ -49,21 +52,33 @@ val scCas = new SparkContext(confSparkCassandra)
 	//val mandf4=df4.keyBy(t=>(t._1,t._2))
 	val jdf=df7.join(df6)
 	val jdf2=jdf.sortBy(x=>(x._1,x._2._1))
+	//val jdf3=jdf2.map(x=>(x._1,(x._2._1,x._2._2._1,x._2._2._2,((x._2._1-x._2._2._2)))))
+	val jdf3=jdf2.map(x=>(x._1,(x._2._1,x._2._2._1,x._2._2._2,(x._2._1-x._2._2._2)*divi/(x._2._2._1-x._2._2._2))))
+	//val jdf4=jdf3.map(x=>(x._1,x._2._4))
+	val jdf4=jdf3.map(x=>(x._1,List(x._2._4)))
+	val jdf5=jdf4.reduceByKey(_++_)
+	val jdf6=jdf5.map(x=>(x._1,x._2.groupBy(identity).toList.sortBy(_._1)))
+	//val jdf7=jdf6.map(x=>x._2).map(x=>x.size)
+	val jdf7=jdf6.map(x=>(x._1,x._2.map(k=>k._2).map(p=>p.size))) 
+	val jdf8=jdf7.map(x=>(x._1,x._2.foldLeft(List[Int](0))((x,y)=>x:+(y+x.last))))
+	//val jdf6=jdf5.map(x=>(x._1,x._2.map(p=>x._2.count(_==p))))
+	//val jdf3=jdf2.map(x=>(x._1,(x._2._1,x._2._2,x._2._3,(x._2._2-x._2._3)/divi)))
 	df5.saveToCassandra("play","tempdata")
-	val test=jdf2.toDF().take(5)
+	val test=jdf8.toDF().take(5)
 	//println(jdf.toDF().take(2))
 	println(test(0))
 	println(test(1))
 	println(test(2))
 	println(test(3))
 	println(test(4)) 
-	jdf2.toDF().show()
+		
+	//jdf7.toDF().show()
 	println(df4.asInstanceOf[AnyRef].getClass.getSimpleName)
 	df2.map{case Row(location: String,item: String,time:Long)=>dumbHere(location,item,time)}.saveToCassandra("play","dumbdata")
 	//df2.show(); 
 	val dfsort=df.groupBy("location","item").count().sort("location","count")
 	val dfsortcount=dfsort.select(dfsort("location"),dfsort("item"),dfsort("count").cast("int"))
-	//dfsortcount.show(32)
+	dfsortcount.show(5)
 	dfsortcount.map{case Row(location: String,item: String,count: Int)=>countRT(location,item,count)}.saveToCassandra("play","sdata")
 	//println(lines.asInstanceOf[AnyRef].getClass.getSimpleName)
 	println("--------------------------------------------")
