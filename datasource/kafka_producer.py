@@ -16,7 +16,7 @@ class Producer(object):
     def __init__(self):
         #self.client = SimpleClient(addr)
 	#self.producer = KeyedProducer(self.client)
-	self.producer = KafkaProducer(bootstrap_servers=["52.39.57.55","52.40.218.111","52.24.38.215","52.33.31.202"],value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks=0,linger_ms=500)
+	self.producer = KafkaProducer(bootstrap_servers=["50.112.40.243","52.25.13.29","50.112.22.187","52.24.80.162"],value_serializer=lambda v: json.dumps(v).encode('utf-8'),acks=0,linger_ms=500)
 
     def jsonITEM(self,itemList):
         strout='{'
@@ -42,7 +42,7 @@ class Producer(object):
 	    #message_info={"location":"NORTH","item":"bread","time":128309123,"storeid":0}
 	    message_info={"location":lItem[0],"item":lItem[1],"time":lItem[2],"storeid":random.randint(0,NUM_USERS-1)}
             #print(message_info)
-            self.producer.send('price_data_part4', message_info)
+            self.producer.send('price', message_info)
             #time.sleep(.05)
             msg_cnt += 1
     
