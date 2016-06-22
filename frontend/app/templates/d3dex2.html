@@ -20,10 +20,13 @@ body {
 .x.axis path {
   display: none;
 }
-
+.bottomarea{
+     margin-bottom: 5cm;
+  }
 </style>
 <center>
-<div id="area1"></div>
+<div id="area1" class='bottomarea'></div>
+<br><br>
 <div id="area2"></div>
 <select id="city">
       <option value="Palo Alto">Palo Alto</option>
@@ -156,6 +159,7 @@ var svg = d3.select("#area1").append("svg")
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
+      .style("font-size", "16px") 
       .call(xAxis);
 
   svg.append("g")
@@ -165,8 +169,9 @@ var svg = d3.select("#area1").append("svg")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
+      .style("font-size", "16px") 
       .style("text-anchor", "end")
-      .text("TOTAL ITEMS");
+      .text("COUNT");
 
   var state = svg.selectAll(".state")
       .data(ddata)
@@ -187,6 +192,7 @@ var svg = d3.select("#area1").append("svg")
       .data(ageNames.slice().reverse())
     .enter().append("g")
       .attr("class", "legend")
+      .style("font-size", "16px") 
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
   legend.append("rect")
@@ -275,7 +281,16 @@ var svg = d3.select("#area2").append("svg")
    svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
+      .style("font-size", "16px") 
       .call(xAxis);
+
+	svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "14px") 
+        .style("text-decoration", "underline")  
+        .text("Cumulative Distribution");
 
   svg.append("g")
       .attr("class", "y axis")
@@ -284,6 +299,7 @@ var svg = d3.select("#area2").append("svg")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
+      .style("font-size", "16px") 
       .style("text-anchor", "end")
       .text("count");
 
