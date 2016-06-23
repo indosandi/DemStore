@@ -2,3 +2,6 @@
 ./bin/kafka-topics.sh --zookeeper localhost:2181 --delete --topic price
 /usr/local/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --topic price --partitions 4 --replication-factor 2
 /usr/local/kafka/bin/kafka-simple-consumer-shell.sh --broker-list localhost:9092 --topic price_data_part4 --partition 0
+bash spawn_kafka_streams.sh 1 k1
+tmux a -t k1
+tmux kill-session -t k1

@@ -38,7 +38,8 @@ class Producer(object):
             lItem=getItemScanned()
 	    message_info={"location":lItem[0],"item":lItem[1],"time":lItem[2],"storeid":random.randint(0,NUM_USERS-1)}
             self.producer.send('price', message_info)
-            #time.sleep(.05)
+	    print(message_info)
+            time.sleep(.05)
             msg_cnt += 1
     
 if __name__ == "__main__":
