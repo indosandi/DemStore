@@ -2,11 +2,7 @@ from random import random
 from bisect import bisect
 import time
 import random
-#class storeLib(object):
-#itemListN=['Bread','Bread','Bread','Toiletries','Toiletries','Drug','Chocolate','Beer','LOTTERY','Tobbaco','Soda']
-#itemListS=['Bread','Bread','Toiletries','Toiletries','Toiletries','Drug','Chocolate','Beer','LOTTERY','Tobbaco','Soda']
-#itemListW=['Bread','Toiletries','Drug','Drug','Drug','Chocolate','Chocolate','Beer','LOTTERY','Tobbaco','Tobbaco','Soda']
-#itemListE=['Bread','Toiletries','Drug','Chocolate','Beer','Beer','LOTTERY','LOTTERY','LOTTERY','LOTTERY','Tobbaco','Tobbaco','Tobbaco','Soda']
+
 itemListN=['Bread','Bread','Drug','Chocolate','Beer','Tobbaco','Soda','Soda']
 itemListN2=['Bread','Drug','Drug','Chocolate','Beer','Tobbaco','Soda']
 itemListN3=['Bread','Drug','Chocolate','Beer','Beer','Tobbaco','Soda','Soda']
@@ -30,7 +26,7 @@ itemw=itemListW
 iteme=itemListE
 location=['San Francisco','Palo Alto','San Jose','Oakland'] 
 currentTime=0
-interval=10000
+interval=5000
 def getTimeStamp():
     millis = int(round(time.time() * 1000))
     return millis
@@ -51,7 +47,12 @@ def getItemScanned():
         out=[locat,random.choice(iteme),getTimeStamp()]
     return out
 def detTime():
+    #temporary solution
     global currentTime
+    global itemn
+    global items
+    global itemw
+    global iteme
     now=getTimeStamp()
     if(now-currentTime>interval):
 	itemn=random.choice(item0)
@@ -59,15 +60,4 @@ def detTime():
 	itemw=random.choice(item2)
 	iteme=random.choice(item3)
 	currentTime=now
-	print itemn
-	print currentTime
-def weighted_choice(choices):
-    values, weights = zip(*choices)
-    total = 0
-    cum_weights = []
-    for w in weights:
-        total += w
-        cum_weights.append(total)
-    x = random() * total
-    i = bisect(cum_weights, x)
-    return values[i]
+

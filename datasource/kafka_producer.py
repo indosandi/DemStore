@@ -36,20 +36,12 @@ class Producer(object):
         
         while True:
             lItem=getItemScanned()
-            #lItem.append(source_symbol)
-
-            #message_info=self.jsonITEM(lItem) 
-	    #message_info={"location":"NORTH","item":"bread","time":128309123,"storeid":0}
 	    message_info={"location":lItem[0],"item":lItem[1],"time":lItem[2],"storeid":random.randint(0,NUM_USERS-1)}
-            #print(message_info)
             self.producer.send('price', message_info)
             #time.sleep(.05)
             msg_cnt += 1
     
 if __name__ == "__main__":
     args = sys.argv
-    #ip_addr = str(args[1])
-    #partition_key = str(args[2])
-    #prod = Producer(ip_addr)
     prod=Producer();
     prod.produce_msgs() 
