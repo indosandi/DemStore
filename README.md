@@ -31,11 +31,13 @@ The simplified process is depicted here where each process contain mapping and e
   <img src="/images/funcprog.png" width="450"/>
 </p>
 ```scala
+// functional programming for calculating accumulative distribution
+// many variable expression is declared so that easier to be understood
 var df2=df.select(df("location"),df("item"),df("time")).sort("location","item","time")
-  val df3=df2.map{case Row(x:String,y:String,z:Long)=>((x,y),(z,z,z))}
+val df3=df2.map{case Row(x:String,y:String,z:Long)=>((x,y),(z,z,z))}
 val df4=df3.reduceByKey((x,y)=>(math.min(x._1,miny._1),math.max(x._2,y._2),x._3))
 val df6=df4.map{case ((a,b),(c,d,e))=case>((a,b),(d,c))}
-  val df7=df2.map{case Row(x:String,y:String,z:Long)=>Long((x,y),z)}
+val df7=df2.map{case Row(x:String,y:String,z:Long)=>Long((x,y),z)}
 val jdf=df7.join(df6)
 val jdf2=jdf.sortBy(x=>(x._1,x._2._31))
 val jdf3=jdf2
