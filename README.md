@@ -28,7 +28,7 @@ Spark is framework to calculate data in distributed manner. In order to programm
 
 The simplified process is depicted here where each process contain mapping and eventually reducing data by key and no loop is involved.
 <p align="center">
-  <img src="/images/funcprog.png" width="450"/>
+  <img src="/images/funcprog2.png" width="450"/>
 </p>
 ```scala
 // functional programming for calculating accumulative distribution
