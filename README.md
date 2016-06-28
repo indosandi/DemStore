@@ -8,7 +8,9 @@ As can be seen in this picture one of the analysis is knowing what is the most p
 
 ## Visual and Demonstration
 The bar chart indicate different location and the color indicate different items. The cumulative distributio shows how single item at single location process through its final count. Since the data is updated real time, the chart will change over time depending on situtaion. The demonstration can be accessed from this web http://thebookface.top
-
+<p align="center">
+  <img src="/images/barchart.png" width="350"/>
+</p>
 ##Data Pipeline
 Data from producer is ingested using Kafka. Spark streaming with scala is used to process data in realtime. Cassandra is used as database choices. Finally flask and d3.js is used as front-end to display data
 
