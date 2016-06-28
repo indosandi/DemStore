@@ -2,7 +2,7 @@
 TopDemandNow is streaming analytic system to analyze behaviour of purchase at chain stores in realtime.
 
 ##Motivation
-The fact that chain stores or convinience stores has concentrated density at particular location. The idea is providing service to allow them to upload their data realtime and perform analysis dependending on bussines need. 
+The fact that chain stores or convenience stores has concentrated density at particular location. The idea is providing service to allow them to upload their data realtime and perform analysis depending on business need. 
 <p align="center">
   <img src="/images/map.png" width="450"/>
 </p>
@@ -10,7 +10,7 @@ The fact that chain stores or convinience stores has concentrated density at par
 As can be seen in this picture one of the analysis is knowing what is the most purchased item at given location and at given time. One of the application is in the field of digital advertising, by knowing that at this time there is surge demand in milk then that is a good time to advertise milk as depicted in picture.
 
 ## Visual and Demonstration
-The bar chart indicate different location and the color indicate different items. The cumulative distributio shows how single item at single location process through its final count. Since the data is updated real time, the chart will change over time depending on situtaion. The demonstration can be accessed from this web http://thebookface.top
+The bar chart indicate different location and the color indicate different items. The cumulative distribution shows how single item at single location process through its final count. Since the data is updated real time, the chart will change over time depending on situtaion. The demonstration can be accessed from this web http://thebookface.top
 <p align="center">
   <img src="/images/barchart.png" width="450"/>
 </p>
@@ -26,10 +26,6 @@ Data from producer is ingested using Kafka. Spark streaming with scala is used t
 #Spark
 Spark is framework to calculate data in distributed manner. In order to programmatically modify or process stream, functional programming is needed as it is suitable for parallel computation. I used Scala to modify RDD in spark. The key point on functional programming is mapping or applying function to data to modify them. Below are snippet of code to calculate cumulative distribution.   
 
-The simplified process is depicted here where each process contain mapping and eventually reducing data by key and no loop is involved.
-<p align="center">
-  <img src="/images/funcprog2.png" width="450"/>
-</p>
 ```scala
 // functional programming for calculating accumulative distribution
 // many variable expression is declared so that easier to be understood
@@ -49,3 +45,9 @@ val jdf7=jdf6.mappingap(x=>(x._1,x._2.map(k=>k._2).map(p=>p.size)))
 // jdf8 is accumulative distribution groupped by key (location,item)
 val jdf8=jdf7.map(x=>(x._1,x._2.foldLeft(List[Int](0))((x,y)=>x:+(y+x.last))))
 ```
+
+The simplified process is depicted here where each process contain mapping and eventually reducing data by key and no loop is involved.
+<p align="center">
+  <img src="/images/funcprog2.png" width="450"/>
+</p>
+
