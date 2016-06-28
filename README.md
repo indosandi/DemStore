@@ -30,4 +30,20 @@ The simplified process is depicted here where each process contain mapping and e
 <p align="center">
   <img src="/images/funcprog.png" width="450"/>
 </p>
-
+```scala
+var df2=df.select(df("location"),df("item"),df("time")).sort("location","item","time")
+  val df3=df2.map{case Row(x:String,y:String,z:Long)=>((x,y),(z,z,z))}
+val df4=df3.reduceByKey((x,y)=>(math.min(x._1,miny._1),math.max(x._2,y._2),x._3))
+val df6=df4.map{case ((a,b),(c,d,e))=case>((a,b),(d,c))}
+  val df7=df2.map{case Row(x:String,y:String,z:Long)=>Long((x,y),z)}
+val jdf=df7.join(df6)
+val jdf2=jdf.sortBy(x=>(x._1,x._2._31))
+val jdf3=jdf2
+.map(x=>(x._1,(x._2._1,x._2._2._1,x._2._2._2,(x._2._1_1-x._2._2._2)*divi/(x._2._2._1-x._2._2._2))))
+val jdf4=jdf3.map(x=>(x._1,List(x._2._4)))
+val jdf5=jdf4.reduceByKey(_++_)
+val jdf6=jdf5.mapping(x=>(x._1,x._2.groupBy(identity).toList.sortBy(_._1)))
+val jdf7=jdf6.mappingap(x=>(x._1,x._2.map(k=>k._2).map(p=>p.size))) 
+// jdf8 is accumulative distribution groupped by key (location,item)
+val jdf8=jdf7.map(x=>(x._1,x._2.foldLeft(List[Int](0))((x,y)=>x:+(y+x.last))))
+```
