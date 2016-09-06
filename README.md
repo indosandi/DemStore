@@ -40,8 +40,8 @@ val jdf3=jdf2
 .map(x=>(x._1,(x._2._1,x._2._2._1,x._2._2._2,(x._2._1_1-x._2._2._2)*divi/(x._2._2._1-x._2._2._2))))
 val jdf4=jdf3.map(x=>(x._1,List(x._2._4)))
 val jdf5=jdf4.reduceByKey(_++_)
-val jdf6=jdf5.mapping(x=>(x._1,x._2.groupBy(identity).toList.sortBy(_._1)))
-val jdf7=jdf6.mappingap(x=>(x._1,x._2.map(k=>k._2).map(p=>p.size))) 
+val jdf6=jdf5.map(x=>(x._1,x._2.groupBy(identity).toList.sortBy(_._1)))
+val jdf7=jdf6.map(x=>(x._1,x._2.map(k=>k._2).map(p=>p.size))) 
 // jdf8 is accumulative distribution groupped by key (location,item)
 val jdf8=jdf7.map(x=>(x._1,x._2.foldLeft(List[Int](0))((x,y)=>x:+(y+x.last))))
 ```
